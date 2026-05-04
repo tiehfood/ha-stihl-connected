@@ -15,29 +15,29 @@ from typing import Any
 
 from .const import FAMILY_TABLE, V6_PROTOCOLS
 
-_BC2_OPMODE = ("POWER_OFF", "STAND_BY", "CHARGING", "DISCHARGING")
+_BC2_OPMODE = ("power_off", "stand_by", "charging", "discharging")
 _BC2_BMS = (
-    "FROZEN_ALARM", "FROZEN", "COLD", "PERFECT", "HOT", "HOT_ALARM",
-    "FATAL_ERROR", "RFU_7",
+    "frozen_alarm", "frozen", "cold", "perfect", "hot", "hot_alarm",
+    "fatal_error", "rfu_7",
 )
-_BC2_HW_ERR = ("OK", "FACTORY_RESET_DONE", "EXT_FLASH_NOT_AVAIL", "RFU")
-_BC2_BC_STATE = ("WORKING_PROPERLY", "RFU_01", "RFU_10", "RFU_11")
+_BC2_HW_ERR = ("ok", "factory_reset_done", "ext_flash_not_avail", "rfu")
+_BC2_BC_STATE = ("working_properly", "rfu_01", "rfu_10", "rfu_11")
 
 
 def _soh_category(soh_pct: int) -> str:
     """Mirror StateOfHealthKt.asStateOfHealth() in the official app."""
     if soh_pct >= 90:
-        return "EXCELLENT"
+        return "excellent"
     if soh_pct >= 75:
-        return "GOOD"
+        return "good"
     if soh_pct >= 60:
-        return "MEDIUM"
-    return "BAD"
-_APX_LED = ("LED_OFF", "LED_1_ON", "LED_1_TO_2", "LED_1_TO_3", "LED_1_TO_4")
+        return "medium"
+    return "bad"
+_APX_LED = ("led_off", "led_1_on", "led_1_to_2", "led_1_to_3", "led_1_to_4")
 _APX_BMS = _BC2_OPMODE
 _ARX_LED = (
-    "LED_OFF", "LED_1_ON", "LED_1_TO_2", "LED_1_TO_3",
-    "LED_1_TO_4", "LED_1_TO_5", "LED_1_TO_6", "LED_RFU",
+    "led_off", "led_1_on", "led_1_to_2", "led_1_to_3",
+    "led_1_to_4", "led_1_to_5", "led_1_to_6", "led_rfu",
 )
 
 
@@ -202,7 +202,7 @@ def _decode_apx00(buf: bytes, family: str, label: str, model: str) -> StihlAdver
             "operation_mode": _APX_BMS[(soh_bms & 0xC0) >> 6],
             "voltage": round(buf[18] * 0.25, 2),
             "temperature": _s8(buf[19]),
-            "led": _APX_LED[led_idx] if led_idx < len(_APX_LED) else f"LED_RFU_{led_idx}",
+            "led": _APX_LED[led_idx] if led_idx < len(_APX_LED) else f"led_rfu_{led_idx}",
             "total_runtime": _u32le(buf, 7),
         },
         booleans={

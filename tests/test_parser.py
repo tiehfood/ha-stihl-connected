@@ -61,13 +61,13 @@ def test_bc2_b_decoding():
     assert a.family == "BC2"
     assert a.sensors["state_of_charge"] == 19
     assert a.sensors["state_of_health"] == 95
-    assert a.sensors["operation_mode"] == "POWER_OFF"
-    assert a.sensors["bms_thermal_state"] == "PERFECT"
-    assert a.sensors["bms_hw_sw_error"] == "OK"
-    assert a.sensors["bc_state"] == "WORKING_PROPERLY"
+    assert a.sensors["operation_mode"] == "power_off"
+    assert a.sensors["bms_thermal_state"] == "perfect"
+    assert a.sensors["bms_hw_sw_error"] == "ok"
+    assert a.sensors["bc_state"] == "working_properly"
     assert a.sensors["tool_id"] == 0x00C9
     assert a.sensors["total_runtime"] == 0x000041B0
-    assert a.sensors["state_of_health_category"] == "EXCELLENT"
+    assert a.sensors["state_of_health_category"] == "excellent"
     assert a.booleans["motor_running"] is False
     assert a.booleans["button_pressed_15s"] is False
     assert a.booleans["low_voltage"] is False
@@ -83,7 +83,7 @@ def test_bc2_c_decoding():
     assert a.family == "BC2"
     assert a.sensors["state_of_charge"] == 100
     assert a.sensors["state_of_health"] == 92
-    assert a.sensors["state_of_health_category"] == "EXCELLENT"  # 92 in 90..100
+    assert a.sensors["state_of_health_category"] == "excellent"  # 92 in 90..100
     assert a.sensors["tool_id"] == 0x0076
     assert a.serial.isdigit() and len(a.serial) == 10
 
@@ -97,10 +97,10 @@ def test_soh_category_buckets():
         b = bytearray(base)
         b[8] = soh_byte & 0x3F
         return bytes(b)
-    for pct, expected in [(100, "EXCELLENT"), (90, "EXCELLENT"),
-                          (89, "GOOD"), (75, "GOOD"),
-                          (74, "MEDIUM"), (60, "MEDIUM"),
-                          (59, "BAD"), (40, "BAD")]:
+    for pct, expected in [(100, "excellent"), (90, "excellent"),
+                          (89, "good"), (75, "good"),
+                          (74, "medium"), (60, "medium"),
+                          (59, "bad"), (40, "bad")]:
         a = parse(with_soh(pct))
         assert a is not None
         assert a.sensors["state_of_health"] == pct

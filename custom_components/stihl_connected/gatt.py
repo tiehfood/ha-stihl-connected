@@ -117,12 +117,12 @@ def _min_max_temp(b: bytes) -> tuple[int, int] | None:
 
 def _charge_mode(b: bytes) -> str | None:
     v = _u8(b)
-    return None if v is None else {0: "NORMAL", 2: "RAPID"}.get(v, f"UNKNOWN_{v}")
+    return None if v is None else {0: "normal", 2: "rapid"}.get(v, f"unknown_{v}")
 
 
 def _storage_mode(b: bytes) -> str | None:
     v = _u8(b)
-    return None if v is None else {0: "OFF", 1: "ACTIVE"}.get(v, f"UNKNOWN_{v}")
+    return None if v is None else {0: "off", 1: "active"}.get(v, f"unknown_{v}")
 
 
 def _sil_window(b: bytes) -> str | None:

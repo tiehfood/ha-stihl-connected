@@ -74,7 +74,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         translation_key="operation_mode",
         name="Operation Mode",
         device_class=SensorDeviceClass.ENUM,
-        options=["POWER_OFF", "STAND_BY", "CHARGING", "DISCHARGING"],
+        options=["power_off", "stand_by", "charging", "discharging"],
         icon="mdi:power-settings",
     ),
     "bms_thermal_state": SensorEntityDescription(
@@ -82,8 +82,8 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         translation_key="bms_thermal_state",
         name="BMS Thermal State",
         device_class=SensorDeviceClass.ENUM,
-        options=["FROZEN_ALARM", "FROZEN", "COLD", "PERFECT", "HOT", "HOT_ALARM",
-                 "FATAL_ERROR", "RFU_7"],
+        options=["frozen_alarm", "frozen", "cold", "perfect", "hot", "hot_alarm",
+                 "fatal_error", "rfu_7"],
         icon="mdi:thermometer",
     ),
     "bms_hw_sw_error": SensorEntityDescription(
@@ -93,7 +93,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.ENUM,
-        options=["OK", "FACTORY_RESET_DONE", "EXT_FLASH_NOT_AVAIL", "RFU"],
+        options=["ok", "factory_reset_done", "ext_flash_not_avail", "rfu"],
     ),
     "bc_state": SensorEntityDescription(
         key="bc_state",
@@ -102,7 +102,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.ENUM,
-        options=["WORKING_PROPERLY", "RFU_01", "RFU_10", "RFU_11"],
+        options=["working_properly", "rfu_01", "rfu_10", "rfu_11"],
     ),
     "tool_id": SensorEntityDescription(
         key="tool_id",
@@ -135,7 +135,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         translation_key="state_of_health_category",
         name="Battery Condition",
         device_class=SensorDeviceClass.ENUM,
-        options=["EXCELLENT", "GOOD", "MEDIUM", "BAD"],
+        options=["excellent", "good", "medium", "bad"],
         icon="mdi:heart-pulse",
     ),
     "tx_power": SensorEntityDescription(
@@ -224,7 +224,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         translation_key="charge_mode",
         name="Charge Mode",
         device_class=SensorDeviceClass.ENUM,
-        options=["NORMAL", "RAPID"],
+        options=["normal", "rapid"],
         icon="mdi:battery-charging",
     ),
     "storage_charge_mode": SensorEntityDescription(
@@ -232,7 +232,7 @@ SENSOR_DESCRIPTIONS: dict[str, SensorEntityDescription] = {
         translation_key="storage_charge_mode",
         name="Storage Charge Mode",
         device_class=SensorDeviceClass.ENUM,
-        options=["OFF", "ACTIVE"],
+        options=["off", "active"],
         icon="mdi:battery-alert",
     ),
     "silent_charge_window": SensorEntityDescription(
