@@ -1,0 +1,160 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "title": "STIHL-Gerät bestätigen",
+        "description": "{name} ({address}) hinzufügen?"
+      },
+      "user": {
+        "title": "STIHL-Gerät hinzufügen",
+        "description": "Wähle ein in der Nähe gefundenes STIHL-Gerät.",
+        "data": {
+          "address": "Gerät"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Gerät ist bereits eingerichtet.",
+      "no_devices_found": "Keine neuen STIHL-Geräte gefunden.",
+      "not_supported": "Dieses Gerät ist kein erkanntes STIHL-Gerät."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "state_of_charge": { "name": "Ladezustand" },
+      "state_of_health": { "name": "Akkuzustand" },
+      "voltage": { "name": "Spannung" },
+      "temperature": { "name": "Temperatur" },
+      "operation_mode": {
+        "name": "Akkustatus",
+        "state": {
+          "POWER_OFF": "Ausgeschaltet",
+          "STAND_BY": "Standby",
+          "CHARGING": "Lädt",
+          "DISCHARGING": "Entlädt"
+        }
+      },
+      "bms_thermal_state": {
+        "name": "BMS-Temperaturzustand",
+        "state": {
+          "FROZEN_ALARM": "Eingefroren (Alarm)",
+          "FROZEN": "Eingefroren",
+          "COLD": "Kalt",
+          "PERFECT": "Optimal",
+          "HOT": "Heiß",
+          "HOT_ALARM": "Heiß (Alarm)",
+          "FATAL_ERROR": "Schwerer Fehler",
+          "RFU_7": "Reserviert"
+        }
+      },
+      "bms_hw_sw_error": {
+        "name": "BMS HW/SW-Fehler",
+        "state": {
+          "OK": "OK",
+          "FACTORY_RESET_DONE": "Werksreset erfolgt",
+          "EXT_FLASH_NOT_AVAIL": "Externer Flash nicht verfügbar",
+          "RFU": "Reserviert"
+        }
+      },
+      "bc_state": {
+        "name": "Akku-Connector-Zustand",
+        "state": {
+          "WORKING_PROPERLY": "Arbeitet einwandfrei",
+          "RFU_01": "Reserviert",
+          "RFU_10": "Reserviert",
+          "RFU_11": "Reserviert"
+        }
+      },
+      "tool_id": { "name": "Letzte Werkzeug-ID" },
+      "coin_cell_voltage": { "name": "Knopfzellen-Spannung" },
+      "env_temperature": { "name": "Umgebungstemperatur" },
+      "min_temperature_seen": { "name": "Minimale Temperatur" },
+      "max_temperature_seen": { "name": "Maximale Temperatur" },
+      "device_unix_time": { "name": "Geräte-Uhr" },
+      "charge_mode": {
+        "name": "Standard Lademodus",
+        "state": { "NORMAL": "Normal", "RAPID": "Schnell" }
+      },
+      "storage_charge_mode": {
+        "name": "Schonendes Laden",
+        "state": { "OFF": "Aus", "ACTIVE": "Aktiv" }
+      },
+      "silent_charge_window": { "name": "Silent-Charging-Zeitfenster" },
+      "linked_machine_serial": { "name": "Maschinen-Seriennummer" },
+      "last_seen_machine_serial": { "name": "Zuletzt gesehene Maschinen-Seriennummer" },
+      "battery_voltage_live": { "name": "Akkuspannung (live)" },
+      "battery_current": { "name": "Akkustrom" },
+      "linked_tool_id": { "name": "Verbundene Werkzeug-ID" },
+      "master_motor_runtime": { "name": "Master-Motorlaufzeit" },
+      "master_motor_speed": { "name": "Master-Motordrehzahl" },
+      "battery_voltage_high_side": { "name": "Akkuspannung (Oberseite)" },
+      "battery_voltage_low_side": { "name": "Akkuspannung (Unterseite)" },
+      "master_input_current": { "name": "Master-Eingangsstrom" },
+      "master_motor_temperature": { "name": "Antriebsmotor-Temperatur" },
+      "master_electronic_temperature": { "name": "Wechselrichter-Temperatur" },
+      "master_motor_start_count": { "name": "Motor-Startzahl" },
+      "master_electronic_runtime": { "name": "Elektronik-Laufzeit" },
+      "master_electronic_start_count": { "name": "Elektronik-Startzahl" },
+      "total_runtime": { "name": "Laufzeit gesamt" },
+      "motor_runtime": { "name": "Motorlaufzeit" },
+      "state_of_health_category": {
+        "name": "Zustand des Akkus",
+        "state": {
+          "EXCELLENT": "Ausgezeichnet",
+          "GOOD": "Gut",
+          "MEDIUM": "Mittel",
+          "BAD": "Schlecht"
+        }
+      },
+      "tx_power": { "name": "Sendeleistung" },
+      "led": { "name": "LED-Muster" },
+      "debug": { "name": "Debug" }
+    },
+    "binary_sensor": {
+      "motor_running": { "name": "Motor läuft" },
+      "button_pressed_15s": { "name": "Taste gedrückt (letzte 15 s)" },
+      "low_voltage": { "name": "Unterspannung" },
+      "hw_error": { "name": "Hardware-Fehler" },
+      "sw_error": { "name": "Software-Fehler" },
+      "is_connectable": { "name": "Verbindbar" },
+      "bms_com_error": { "name": "BMS-Kommunikationsfehler" },
+      "com_issue": { "name": "Kommunikationsproblem" },
+      "short_press_event": { "name": "Kurzes Drücken erkannt" },
+      "security_active": { "name": "Sicherheit aktiv" },
+      "security_linked": { "name": "Sicherheit gekoppelt" },
+      "security_linking_requested": { "name": "Sicherheits-Kopplung angefordert" },
+      "rtc_out_of_sync": { "name": "RTC nicht synchron" },
+      "data_sync_older_24h": { "name": "Datensync älter als 24 h" },
+      "history_event_avail": { "name": "Ereignis-Historie verfügbar" },
+      "history_charge_avail": { "name": "Lade-Historie verfügbar" },
+      "history_discharge_avail": { "name": "Entlade-Historie verfügbar" },
+      "history_standby_avail": { "name": "Standby-Historie verfügbar" },
+      "reduced_feature_mode": { "name": "Eingeschränkter Modus" },
+      "reduced_feature_battery": { "name": "Eingeschränkt (Akku)" },
+      "reduced_feature_temperature": { "name": "Eingeschränkt (Temperatur)" },
+      "attached_to_other_machine": { "name": "An andere Maschine gekoppelt" },
+      "coin_cell_error": { "name": "Knopfzellen-Fehler" },
+      "virtual_mark_set": { "name": "Virtuelle Markierung gesetzt" },
+      "runtime_history_avail": { "name": "Laufzeit-Historie verfügbar" },
+      "event_history_avail": { "name": "Ereignis-Historie verfügbar" },
+      "raw_data_avail": { "name": "Rohdaten verfügbar" },
+      "machine_linked": { "name": "Maschine gekoppelt" },
+      "machine_serial_avail": { "name": "Maschinen-Seriennummer verfügbar" },
+      "message_available": { "name": "Nachricht verfügbar" },
+      "error_indication": { "name": "Fehlerhinweis" },
+      "event_error": { "name": "Ereignis: Fehler" },
+      "event_maintenance": { "name": "Ereignis: Wartung" },
+      "event_usage": { "name": "Ereignis: Nutzung" },
+      "event_misc": { "name": "Ereignis: Sonstiges" },
+      "event_silent": { "name": "Ereignis: Stille" },
+      "maintenance_due": { "name": "Wartung fällig" },
+      "change_battery": { "name": "Akku tauschen" },
+      "error_notifier_active": { "name": "Fehler-Notifier aktiv" },
+      "data_avail": { "name": "Daten verfügbar" },
+      "data_avail_in_storage": { "name": "Daten gespeichert" },
+      "service_needed": { "name": "Service benötigt" },
+      "master_changed": { "name": "Master gewechselt" }
+    }
+  }
+}

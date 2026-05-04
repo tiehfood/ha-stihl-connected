@@ -1,0 +1,160 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "title": "Confirm STIHL device",
+        "description": "Add {name} ({address})?"
+      },
+      "user": {
+        "title": "Add STIHL device",
+        "description": "Pick a STIHL device discovered nearby.",
+        "data": {
+          "address": "Device"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Device is already configured.",
+      "no_devices_found": "No new STIHL devices were found.",
+      "not_supported": "This device is not a recognised STIHL device."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "state_of_charge": { "name": "State of charge" },
+      "state_of_health": { "name": "State of health" },
+      "voltage": { "name": "Voltage" },
+      "temperature": { "name": "Temperature" },
+      "operation_mode": {
+        "name": "Operation mode",
+        "state": {
+          "POWER_OFF": "Off",
+          "STAND_BY": "Stand-by",
+          "CHARGING": "Charging",
+          "DISCHARGING": "Discharging"
+        }
+      },
+      "bms_thermal_state": {
+        "name": "BMS thermal state",
+        "state": {
+          "FROZEN_ALARM": "Frozen (alarm)",
+          "FROZEN": "Frozen",
+          "COLD": "Cold",
+          "PERFECT": "Perfect",
+          "HOT": "Hot",
+          "HOT_ALARM": "Hot (alarm)",
+          "FATAL_ERROR": "Fatal error",
+          "RFU_7": "Reserved"
+        }
+      },
+      "bms_hw_sw_error": {
+        "name": "BMS HW/SW error",
+        "state": {
+          "OK": "OK",
+          "FACTORY_RESET_DONE": "Factory reset done",
+          "EXT_FLASH_NOT_AVAIL": "Ext flash unavailable",
+          "RFU": "Reserved"
+        }
+      },
+      "bc_state": {
+        "name": "Battery connector state",
+        "state": {
+          "WORKING_PROPERLY": "Working properly",
+          "RFU_01": "Reserved",
+          "RFU_10": "Reserved",
+          "RFU_11": "Reserved"
+        }
+      },
+      "tool_id": { "name": "Last tool ID" },
+      "coin_cell_voltage": { "name": "Coin cell voltage" },
+      "env_temperature": { "name": "Ambient temperature" },
+      "min_temperature_seen": { "name": "Minimum temperature" },
+      "max_temperature_seen": { "name": "Maximum temperature" },
+      "device_unix_time": { "name": "Device clock" },
+      "charge_mode": {
+        "name": "Charge mode",
+        "state": { "NORMAL": "Normal", "RAPID": "Rapid" }
+      },
+      "storage_charge_mode": {
+        "name": "Storage charge mode",
+        "state": { "OFF": "Off", "ACTIVE": "Active" }
+      },
+      "silent_charge_window": { "name": "Silent charge window" },
+      "linked_machine_serial": { "name": "Machine serial" },
+      "last_seen_machine_serial": { "name": "Last seen machine serial" },
+      "battery_voltage_live": { "name": "Battery voltage (live)" },
+      "battery_current": { "name": "Battery current" },
+      "linked_tool_id": { "name": "Linked tool ID" },
+      "master_motor_runtime": { "name": "Master motor runtime" },
+      "master_motor_speed": { "name": "Master motor speed" },
+      "battery_voltage_high_side": { "name": "Battery voltage (high side)" },
+      "battery_voltage_low_side": { "name": "Battery voltage (low side)" },
+      "master_input_current": { "name": "Master input current" },
+      "master_motor_temperature": { "name": "Drive motor temperature" },
+      "master_electronic_temperature": { "name": "Inverter temperature" },
+      "master_motor_start_count": { "name": "Motor start count" },
+      "master_electronic_runtime": { "name": "Electronic runtime" },
+      "master_electronic_start_count": { "name": "Electronic start count" },
+      "total_runtime": { "name": "Total runtime" },
+      "motor_runtime": { "name": "Motor runtime" },
+      "state_of_health_category": {
+        "name": "Battery condition",
+        "state": {
+          "EXCELLENT": "Excellent",
+          "GOOD": "Good",
+          "MEDIUM": "Medium",
+          "BAD": "Poor"
+        }
+      },
+      "tx_power": { "name": "TX power" },
+      "led": { "name": "LED pattern" },
+      "debug": { "name": "Debug" }
+    },
+    "binary_sensor": {
+      "motor_running": { "name": "Motor running" },
+      "button_pressed_15s": { "name": "Button pressed (last 15 s)" },
+      "low_voltage": { "name": "Low voltage" },
+      "hw_error": { "name": "Hardware error" },
+      "sw_error": { "name": "Software error" },
+      "is_connectable": { "name": "Connectable" },
+      "bms_com_error": { "name": "BMS comms error" },
+      "com_issue": { "name": "Communication issue" },
+      "short_press_event": { "name": "Short-press event" },
+      "security_active": { "name": "Security active" },
+      "security_linked": { "name": "Security linked" },
+      "security_linking_requested": { "name": "Security linking requested" },
+      "rtc_out_of_sync": { "name": "RTC out of sync" },
+      "data_sync_older_24h": { "name": "Data sync older than 24 h" },
+      "history_event_avail": { "name": "Event history available" },
+      "history_charge_avail": { "name": "Charge history available" },
+      "history_discharge_avail": { "name": "Discharge history available" },
+      "history_standby_avail": { "name": "Standby history available" },
+      "reduced_feature_mode": { "name": "Reduced-feature mode" },
+      "reduced_feature_battery": { "name": "Reduced feature (battery)" },
+      "reduced_feature_temperature": { "name": "Reduced feature (temperature)" },
+      "attached_to_other_machine": { "name": "Attached to other machine" },
+      "coin_cell_error": { "name": "Coin-cell error" },
+      "virtual_mark_set": { "name": "Virtual mark set" },
+      "runtime_history_avail": { "name": "Runtime history available" },
+      "event_history_avail": { "name": "Event history available" },
+      "raw_data_avail": { "name": "Raw data available" },
+      "machine_linked": { "name": "Machine linked" },
+      "machine_serial_avail": { "name": "Machine serial available" },
+      "message_available": { "name": "Message available" },
+      "error_indication": { "name": "Error indication" },
+      "event_error": { "name": "Event: error" },
+      "event_maintenance": { "name": "Event: maintenance" },
+      "event_usage": { "name": "Event: usage" },
+      "event_misc": { "name": "Event: misc" },
+      "event_silent": { "name": "Event: silent" },
+      "maintenance_due": { "name": "Maintenance due" },
+      "change_battery": { "name": "Change battery" },
+      "error_notifier_active": { "name": "Error notifier active" },
+      "data_avail": { "name": "Data available" },
+      "data_avail_in_storage": { "name": "Data in storage" },
+      "service_needed": { "name": "Service needed" },
+      "master_changed": { "name": "Master changed" }
+    }
+  }
+}

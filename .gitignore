@@ -1,0 +1,51 @@
+# --- Claude / development context ---
+.claude/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# --- Virtualenvs ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- macOS / Windows ---
+.DS_Store
+Thumbs.db
+
+# --- Reverse engineering byproducts (in case anyone drops them at root) ---
+*.apk
+stihl_decomp/
+stihl_decomp_res/
+stihl_apktool/
+
+# --- HA dev artefacts ---
+config/
+.storage/
+home-assistant.log
+
+tools/

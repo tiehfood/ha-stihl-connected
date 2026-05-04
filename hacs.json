@@ -1,0 +1,6 @@
+{
+  "name": "STIHL Connected",
+  "render_readme": true,
+  "country": ["DE", "AT", "CH"],
+  "homeassistant": "2024.12.0"
+}
