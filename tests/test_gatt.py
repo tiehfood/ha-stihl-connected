@@ -143,18 +143,34 @@ def test_sc1_families_have_no_reads():
     assert gatt._READS_BY_FAMILY["SC1MP"] == []
 
 
-def test_connector_info_temperatures_are_not_exposed():
-    # Read (so the raw bytes reach the debug log) but decoded to None until
-    # the scale factor is known.
+def test_connector_info_temperature_decoders():
     for family in ("BC2", "SC2A", "IC72V"):
         dec = _decoders(family)
-        assert dec["env_temperature"] is gatt._unresolved
-        assert dec["min_max_temp"] is gatt._unresolved
-        assert gatt._unresolved(bytes.fromhex("cd00")) is None
+        assert dec["env_temperature"] is gatt._temp_tenths
+        assert dec["min_max_temp"] is gatt._min_max_temp
+
+
+def test_temp_tenths():
+    # 16-bit LE, tenths of a degree C. 0x00FF is the reading behind issue #1's
+    # "13 V" coin-cell value, with a reference sensor at 23.4 C in the room.
+    assert gatt._temp_tenths(bytes.fromhex("ff00")) == 25.5
+    assert gatt._temp_tenths(bytes.fromhex("cd00")) == 20.5
+    assert gatt._temp_tenths(bytes.fromhex("8600")) == 13.4
+    assert gatt._temp_tenths(bytes.fromhex("0000")) == 0.0
+    # signed, so a frosty morning reads negative instead of wrapping to ~6500 C
+    assert gatt._temp_tenths(bytes.fromhex("f6ff")) == -1.0
+    assert gatt._temp_tenths(b"\x01") is None
+
+
+def test_min_max_temp():
+    assert gatt._min_max_temp(bytes.fromhex("cd008600")) == (20.5, 13.4)
+    assert gatt._min_max_temp(bytes.fromhex("9cffff00")) == (-10.0, 25.5)
+    # 4 bytes required — the old sint8-pair decoder accepted 2 and was wrong
+    assert gatt._min_max_temp(bytes.fromhex("cd00")) is None
 
 
 def test_every_plan_entry_has_a_known_target():
-    known = {"sensors", "booleans", "device_info", "_indicator_bits", "_unresolved"}
+    known = {"sensors", "booleans", "device_info", "_indicator_bits", "_min_max"}
     for family, plan in gatt._READS_BY_FAMILY.items():
         for _uuid, key, _dec, target in plan:
             assert target in known, f"{family}.{key} -> {target}"

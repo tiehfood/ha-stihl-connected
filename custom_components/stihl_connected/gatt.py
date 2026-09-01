@@ -5,16 +5,16 @@ ECDSA-P256 keypair from the official Stihl Cloud account.
 
 Per family we read a curated subset of high-value characteristics:
   - DeviceInfo (0x180A)        : model, hw rev, sw rev (strings)
-  - ConnectorInfo SC2A         : coin cell voltage, RTC, linked machine serial
-  - ConnectorInfo BC2          : RTC (no coin cell on this variant)
+  - ConnectorInfo SC2A         : coin cell voltage, env & min/max temp, RTC,
+                                  linked machine serial
+  - ConnectorInfo BC2          : env & min/max temp, RTC (no coin cell here)
   - BatterySettings BC2        : charge mode, storage charge, silent-charge schedule
   - MachineInfo SC2A           : live battery V/I, motor RPM, motor runtime,
                                   tool ID, battery state indicator
   - MachineInfo v72 (IC72V)    : dual-battery voltage, input current, motor &
                                   electronics temperature, runtimes, start counts
 
-APX00 and ARX000 only expose DeviceInfo. The ConnectorInfo temperatures are
-read but not exposed yet — see `_unresolved`.
+APX00 and ARX000 only expose DeviceInfo.
 """
 from __future__ import annotations
 
@@ -106,14 +106,21 @@ def _ascii(b: bytes) -> str | None:
     return s or None
 
 
-def _unresolved(b: bytes) -> None:
-    """Read the characteristic but expose nothing.
+def _temp_tenths(b: bytes) -> float | None:
+    """ConnectorInfo temperature: 16-bit LE, tenths of a degree Celsius.
 
-    The ConnectorInfo temperatures are 16-bit values whose scale factor is not
-    derivable from the app (it never renders them). Reading them still puts the
-    raw bytes in the debug log, which is what settles the scale — see issue #1.
+    The app declares env temp unsigned and min/max signed; signed is used for
+    both here so sub-zero readings don't wrap to ~6500 C.
     """
-    return None
+    v = _s16le(b)
+    return None if v is None else round(v / 10.0, 1)
+
+
+def _min_max_temp(b: bytes) -> tuple[float, float] | None:
+    """4 bytes: min at offset 0, max at offset 2."""
+    if len(b) < 4:
+        return None
+    return _temp_tenths(b), _temp_tenths(b[2:])
 
 
 def _charge_mode(b: bytes) -> str | None:
@@ -152,7 +159,7 @@ def _decode_battery_state_indicator(b: bytes) -> dict[str, bool] | None:
 
 # (uuid, key, decoder, target) where target is "sensors", "booleans",
 # "device_info", "_indicator_bits" (a flat dict of bools to merge) or
-# "_unresolved" (read for the debug log, never exposed).
+# "_min_max" (a (min, max) pair split into two sensors).
 _DIS_READS: list[tuple[str, str, Any, str]] = [
     (DIS_MODEL, "model_number", _ascii, "device_info"),
     (DIS_HW_REV, "hw_revision", _ascii, "device_info"),
@@ -160,8 +167,8 @@ _DIS_READS: list[tuple[str, str, Any, str]] = [
 ]
 
 _BC2_READS: list[tuple[str, str, Any, str]] = _DIS_READS + [
-    (BC2_CI_ENV_TEMP, "env_temperature", _unresolved, "_unresolved"),
-    (BC2_CI_MIN_MAX_TEMP, "min_max_temp", _unresolved, "_unresolved"),
+    (BC2_CI_ENV_TEMP, "env_temperature", _temp_tenths, "sensors"),
+    (BC2_CI_MIN_MAX_TEMP, "min_max_temp", _min_max_temp, "_min_max"),
     (BC2_CI_UNIX_TIME, "device_unix_time", _u32le, "sensors"),
     (BC2_BS_CHARGE_MODE, "charge_mode", _charge_mode, "sensors"),
     (BC2_BS_STORAGE_CHARGE_MODE, "storage_charge_mode", _storage_mode, "sensors"),
@@ -172,8 +179,8 @@ _BC2_READS: list[tuple[str, str, Any, str]] = _DIS_READS + [
 _SC2A_CI_READS: list[tuple[str, str, Any, str]] = [
     (SC2A_CI_COIN_CELL_VOLTAGE, "coin_cell_voltage",
      lambda b: round(_u8(b) * 0.05, 2) if _u8(b) is not None else None, "sensors"),
-    (SC2A_CI_ENV_TEMP, "env_temperature", _unresolved, "_unresolved"),
-    (SC2A_CI_MIN_MAX_TEMP, "min_max_temp", _unresolved, "_unresolved"),
+    (SC2A_CI_ENV_TEMP, "env_temperature", _temp_tenths, "sensors"),
+    (SC2A_CI_MIN_MAX_TEMP, "min_max_temp", _min_max_temp, "_min_max"),
     (SC2A_CI_UNIX_TIME, "device_unix_time", _u32le, "sensors"),
     (SC2A_CI_LINKED_MACHINE_SERIAL, "linked_machine_serial",
      lambda b: str(_u32le(b)) if _u32le(b) else None, "sensors"),
@@ -278,6 +285,10 @@ async def read_all(device: BLEDevice, family: str, *,
                 booleans[key] = bool(value)
             elif target == "device_info":
                 device_info[key] = value
+            elif target == "_min_max":
+                mn, mx = value
+                sensors["min_temperature_seen"] = mn
+                sensors["max_temperature_seen"] = mx
             elif target == "_indicator_bits":
                 booleans.update(value)  # already dict[str, bool]
     finally:
