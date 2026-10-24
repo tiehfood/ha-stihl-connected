@@ -39,6 +39,10 @@ _ARX_LED = (
     "led_off", "led_1_on", "led_1_to_2", "led_1_to_3",
     "led_1_to_4", "led_1_to_5", "led_1_to_6", "led_rfu",
 )
+# These families advertise no SoC; the app derives it from the lit LED bars
+# (CalculateBatteryStateOfChargeUseCase), indexed by the LED code.
+_APX_SOC = (0, 25, 50, 75, 100, None, None, None)
+_ARX_SOC = (0, 17, 33, 50, 67, 83, 100, None)
 
 
 @dataclass(frozen=True)
@@ -125,6 +129,7 @@ def _decode_arx000(buf: bytes, family: str, label: str, model: str) -> StihlAdve
         sw_version=f"{buf[15]}.{buf[14]:02d}",
         hw_version=f"{buf[13]}.{buf[12]:02d}",
         sensors={
+            "state_of_charge": _ARX_SOC[(s & 0xE0) >> 5],
             "voltage": round(buf[18] * 0.25, 2),
             "temperature": _s8(buf[19]),
             "tool_id": buf[16],
@@ -197,6 +202,7 @@ def _decode_apx00(buf: bytes, family: str, label: str, model: str) -> StihlAdver
         sw_version=f"{buf[15]}.{buf[14]:02d}",
         hw_version=f"{buf[13]}.{buf[12]:02d}",
         sensors={
+            "state_of_charge": _APX_SOC[led_idx],
             "state_of_health": soh_pct,
             "state_of_health_category": _soh_category(soh_pct),
             "operation_mode": _APX_BMS[(soh_bms & 0xC0) >> 6],

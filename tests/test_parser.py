@@ -40,7 +40,18 @@ PAYLOADS = {
     "ic72v_a": "08092bfd018c69fcf92b0000001f000000005601",
     "bc2_b":   "0605089ed038000c37b04100008e0ac900130201",  # SOC 19 SOH 95
     "bc2_c":   "0605109ed038000c34e02b00008e0a7600640201",  # SOC 100 SOH 92
+    # Two AP 500 batteries, rebuilt from their decoded states: 3 and 4 LED
+    # bars, 39.5 V and 41.0 V, SOH 100, serials 926473230 and 926473235.
+    "apx00_a": "050edc38370000359d00000400034700" "3c609e0c",
+    "apx00_b": "0513dc38370000a76d00000400034700" "3c80a40e",
+    "arx000":  "0311223344556610000000020001050a" "07000000",
 }
+
+
+def _with_status(payload: str, status: int) -> bytes:
+    buf = bytearray.fromhex(payload)
+    buf[17] = status
+    return bytes(buf)
 
 
 def test_unknown_returns_none():
@@ -136,6 +147,50 @@ def test_serial_is_zero_padded_10_digits():
     assert a is not None and b is not None
     assert len(a.serial) == 10 and a.serial.isdigit()
     assert len(b.serial) == 10 and b.serial.isdigit()
+
+
+def test_apx00_decoding():
+    a = parse(bytes.fromhex(PAYLOADS["apx00_a"]))
+    assert a is not None
+    assert a.family == "APX00"
+    assert a.sensors["led"] == "led_1_to_3"
+    assert a.sensors["state_of_charge"] == 75
+    assert a.sensors["voltage"] == 39.5
+    assert a.sensors["temperature"] == 12
+    assert a.sensors["state_of_health"] == 100
+    assert a.sensors["operation_mode"] == "power_off"
+    assert a.sensors["total_runtime"] == 40245
+    assert a.sw_version == "0.71"
+    assert a.hw_version == "3.00"
+
+    b = parse(bytes.fromhex(PAYLOADS["apx00_b"]))
+    assert b is not None
+    assert b.sensors["led"] == "led_1_to_4"
+    assert b.sensors["state_of_charge"] == 100
+    assert b.sensors["voltage"] == 41.0
+
+
+def test_apx00_soc_from_led_bars():
+    expected = {0: 0, 1: 25, 2: 50, 3: 75, 4: 100, 5: None, 6: None, 7: None}
+    for code, soc in expected.items():
+        a = parse(_with_status(PAYLOADS["apx00_a"], code << 5))
+        assert a is not None
+        assert a.sensors["state_of_charge"] == soc, (code, a.sensors["state_of_charge"])
+
+
+def test_arx000_soc_from_led_bars():
+    expected = {0: 0, 1: 17, 2: 33, 3: 50, 4: 67, 5: 83, 6: 100, 7: None}
+    for code, soc in expected.items():
+        a = parse(_with_status(PAYLOADS["arx000"], code << 5))
+        assert a is not None
+        assert a.family == "ARX000"
+        assert a.sensors["state_of_charge"] == soc, (code, a.sensors["state_of_charge"])
+
+
+def test_arx000_keeps_mac_identifier():
+    a = parse(bytes.fromhex(PAYLOADS["arx000"]))
+    assert a is not None
+    assert a.serial == "66:55:44:33:22:11"
 
 
 if __name__ == "__main__":

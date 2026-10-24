@@ -34,8 +34,8 @@ Local Bluetooth integration for STIHL Connected hardware — AP smart batteries,
 | Family   | Examples                              | Passive sensors | Active GATT |
 |----------|---------------------------------------|-----------------|-------------|
 | **BC2**  | AP200S, AP500S, AP600S, ARxL          | SoC, SoH, BMS state, op mode, motor running, button press, low voltage, total runtime, last tool ID, security flags | coin-cell V, ambient/min/max temp, charge mode, storage charge, silent-charge schedule, model, HW/SW |
-| **APX00** | older AP smart batteries              | SoH, op mode, voltage, temperature, LED state | (same as BC2) |
-| **ARX000** | AL chargers, MP1                     | voltage, temperature, LED pattern, tool ID | (same as BC2) |
+| **APX00** | older AP smart batteries              | SoC (from LED bars, 25 % steps), SoH, op mode, voltage, temperature, LED state | (same as BC2) |
+| **ARX000** | AL chargers, MP1                     | SoC (from LED bars), voltage, temperature, LED pattern, tool ID | (same as BC2) |
 | **SC2A** | Smart Connector 2 A                   | status / event flags, signal indicators | linked machine serial, live battery V/I, motor RPM/runtime, battery state |
 | **SC1**  | Smart Connector 1                     | voltage, temperature, status flags | DeviceInfo strings |
 | **SC1MP** | Smart Connector 1.1                   | voltage, temperature, motor runtime | DeviceInfo strings |
