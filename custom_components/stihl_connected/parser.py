@@ -52,7 +52,7 @@ class StihlAdvertisement:
     family: str
     model: str
     label: str
-    serial: str  # canonical "device id" — serial for BC2/IC72v, MAC otherwise
+    serial: str  # canonical "device id" — serial for BC2/APX00, MAC otherwise
     raw: bytes
     sw_version: str | None = None
     hw_version: str | None = None
@@ -70,6 +70,10 @@ def _s8(b: int) -> int:
 
 def _mac(buf: bytes, lo: int, hi: int) -> str:
     return ":".join(f"{b:02X}" for b in reversed(buf[lo:hi]))
+
+
+def _serial_le(buf: bytes, lo: int, hi: int) -> str:
+    return str(int.from_bytes(buf[lo:hi], "little"))
 
 
 def _serial_decimal(buf: bytes, lo: int, hi: int) -> str:
@@ -196,9 +200,11 @@ def _decode_apx00(buf: bytes, family: str, label: str, model: str) -> StihlAdver
     s = buf[17]
     led_idx = (s & 0xE0) >> 5
     soh_pct = (soh_bms & 0x3F) + 40
+    # The app matches these bytes against hex(serial), so this is the battery
+    # serial number, not a MAC (the real BLE address differs).
     return StihlAdvertisement(
         family=family, model=model, label=label,
-        serial=_mac(buf, 1, 7), raw=buf,
+        serial=_serial_le(buf, 1, 7), raw=buf,
         sw_version=f"{buf[15]}.{buf[14]:02d}",
         hw_version=f"{buf[13]}.{buf[12]:02d}",
         sensors={

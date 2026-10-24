@@ -170,6 +170,16 @@ def test_apx00_decoding():
     assert b.sensors["voltage"] == 41.0
 
 
+def test_apx00_serial_is_decimal():
+    # The app finds an APX00 by comparing these bytes with hex(serial), so
+    # they hold the battery serial, not the BLE address.
+    a = parse(bytes.fromhex(PAYLOADS["apx00_a"]))
+    b = parse(bytes.fromhex(PAYLOADS["apx00_b"]))
+    assert a is not None and b is not None
+    assert a.serial == "926473230"
+    assert b.serial == "926473235"
+
+
 def test_apx00_soc_from_led_bars():
     expected = {0: 0, 1: 25, 2: 50, 3: 75, 4: 100, 5: None, 6: None, 7: None}
     for code, soc in expected.items():
